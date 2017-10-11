@@ -16,11 +16,11 @@ services:
           - "9000"
       environment:
           - "DB_HOST=db"
-          - "DB_DATABASE=laravel"
+          - "DB_DATABASE=gaxze"
   db:
       image: mariadb
       environment:
           - MYSQL_ROOT_PASSWORD=root
-          - MYSQL_DATABASE=laravel
+          - MYSQL_DATABASE=gaxze
       volumes:
           - ./database:/var/lib/mysql
