@@ -4,7 +4,7 @@ services:
       build:
           context: ./nginx
       ports:
-          - "8080:80"
+          - "5000:80"
       volumes:
           - ./app:/var/app
   fpm:
