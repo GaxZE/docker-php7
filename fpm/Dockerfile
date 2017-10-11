@@ -1,17 +1,53 @@
-FROM ubuntu:latest
+# See https://github.com/docker-library/php/blob/master/7.1/fpm/Dockerfile
+FROM php:7.1-fpm
 
-RUN apt-get update && apt-get install -y software-properties-common language-pack-en-base \
-    && LC_ALL=en_US.UTF-8 add-apt-repository -y ppa:ondrej/php \
-    && apt-get update \
-    && apt-get install -y php7.0 php7.0-fpm php7.0-mysql mcrypt php7.0-gd curl php7.0-xml php7.0-zip  \
-       php7.0-curl php-redis php7.0-mbstring sendmail supervisor nano git \
-    && mkdir /run/php \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ARG TIMEZONE
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN apt-get update && apt-get install -y \
+        libmcrypt-dev \
+        libicu-dev \
+        libpq-dev \
+        libbz2-dev \
+        php-pear \
+        git \
+        unzip \
+        mc \
+        vim \
+        nano \
+        wget \
+        libevent-dev \
+        librabbitmq-dev \
+    && docker-php-ext-install iconv \
+    && docker-php-ext-install mcrypt \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install bz2 \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install opcache \
+    && docker-php-ext-enable opcache
 
-RUN sed -i -e 's/listen = \/run\/php\/php7.0-fpm.sock/listen = 0.0.0.0:9000/g' /etc/php/7.0/fpm/pool.d/www.conf \
-    && sed -i -e 's/;daemonize = yes/daemonize = no/g' /etc/php/7.0/fpm/php-fpm.conf
+# Install GD 
+RUN apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng12-dev \
+     && docker-php-ext-configure gd \
+          --enable-gd-native-ttf \
+          --with-freetype-dir=/usr/include/freetype2 \
+          --with-png-dir=/usr/include \
+          --with-jpeg-dir=/usr/include \
+    && docker-php-ext-install gd \
+    && docker-php-ext-enable gd
+
+
+# Set timezone
+RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone
+RUN printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini
+RUN "date"
+
+# Type docker-php-ext-install to see available extensions
+RUN docker-php-ext-install pdo pdo_mysql
 
 # Register the COMPOSER_HOME environment variable
 ENV COMPOSER_HOME /composer
@@ -30,5 +66,3 @@ RUN composer global require "laravel/installer"
 WORKDIR /var/app
 
 EXPOSE 9000
-
-CMD ["/usr/bin/supervisord"]
