@@ -1,26 +1,29 @@
 version: "2"
 services:
-  nginx:
-      build:
-          context: ./nginx
-      ports:
-          - "5000:80"
-      volumes:
-          - ./app:/var/app
-  fpm:
-      build:
-          context: ./fpm
-      volumes:
-          - ./app:/var/app
-      expose:
-          - "9000"
-      environment:
-          - "DB_HOST=db"
-          - "DB_DATABASE=gaxze"
-  db:
-      image: mariadb
-      environment:
-          - MYSQL_ROOT_PASSWORD=root
-          - MYSQL_DATABASE=gaxze
-      volumes:
-          - ./database:/var/lib/mysql
+    nginx:
+        build: nginx
+        ports:
+            - "5000:80"
+        volumes:
+            - ./app:/var/app
+    fpm:
+        build: 
+            context: fpm
+            args:
+                TIMEZONE: ${TIMEZONE}
+        volumes:
+            - ./app:/var/app
+        expose:
+            - "9000"
+        environment:
+            - "DB_HOST=db"
+            - "DB_DATABASE=${MYSQL_DATABASE}"
+    db:
+        image: mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - ./database:/var/lib/mysql
