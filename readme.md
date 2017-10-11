@@ -4,9 +4,9 @@ A quick and easy way to setup your PHP application using Docker and docker-compo
 
 ## Usage
 ~~~
-git clone git@github.com:shameerc/docker-php7.git
+git clone git@github.com:GaxZE/docker-php7.git
 cd docker-php7
-docker-compose up
+docker-compose up -d
 ~~~
 
 ### Structure
@@ -28,6 +28,3 @@ docker-compose up
 - `app` is the directory for project files. Our Nginx config is pointing to `app/public`, which can be changed in `nginx/default.conf`
 - `database` is where MariDB will store the database files.
 
-
-### How it works  
-**[Read Here](https://blog.shameerc.com/2016/08/my-docker-setup-ubuntu-php7-fpm-nginx-and-mariadb)**
