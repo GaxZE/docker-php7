@@ -63,6 +63,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN composer global require "hirak/prestissimo"
 RUN composer global require "laravel/installer"
 
+# Download Drupal Console
+RUN curl https://drupalconsole.com/installer -L -o drupal.phar
+# Install console.
+RUN mv drupal.phar /usr/local/bin/drupal && \
+    chmod +x /usr/local/bin/drupal && \
+    drupal init --override
+
 WORKDIR /var/app
 
 EXPOSE 9000
