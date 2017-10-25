@@ -20,7 +20,8 @@ docker-compose up -d
 
 ~~~
 ├── app
-│   └── index.php
+│   └── public
+│   	└── index.php
 ├── database
 ├── docker-compose.yml
 ├── fpm
