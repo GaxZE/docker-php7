@@ -20,8 +20,7 @@ docker-compose up -d
 
 ~~~
 ├── app
-│   └── public
-│       └── index.php
+│   └── index.php
 ├── database
 ├── docker-compose.yml
 ├── fpm
@@ -32,13 +31,14 @@ docker-compose up -d
 │   └── default.conf
 ~~~
 
-- `app` is the directory for project files. The Nginx config is pointing to `app/public`, which can be changed in `nginx/default.conf`
+- `app` is the directory for project files. The Nginx config is pointing to `/var/app/`, which can be changed in `nginx/default.conf`
 - `database` is where MariDB will store the database files.
-- Visit http://localhost:5000 after build.
+- Visit http://localhost:5000/ after build.
 
 ## Helpful commands
 
 ~~~
-docker ps # to list all images
-docker exec -it <CONTAINER_ID> bash # ssh into container 
+docker ps # to list all containers.
+docker exec -it <CONTAINER_ID> bash # ssh into container.
+docker images # list all images created.
 ~~~
