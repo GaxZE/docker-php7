@@ -49,27 +49,6 @@ RUN "date"
 # Type docker-php-ext-install to see available extensions
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Register the COMPOSER_HOME environment variable
-ENV COMPOSER_HOME /composer
-
-# Add global binary directory to PATH and make sure to re-export it
-ENV PATH /composer/vendor/bin:$PATH
-
-# Allow Composer to be run as root
-ENV COMPOSER_ALLOW_SUPERUSER 1
-
-# Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer global require "hirak/prestissimo"
-RUN composer global require "laravel/installer"
-
-# Download Drupal Console
-RUN curl https://drupalconsole.com/installer -L -o drupal.phar
-# Install console.
-RUN mv drupal.phar /usr/local/bin/drupal && \
-    chmod +x /usr/local/bin/drupal && \
-    drupal init --override
-
 WORKDIR /var/app
 
 EXPOSE 9000
